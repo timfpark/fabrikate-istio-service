@@ -1,0 +1,41 @@
+{{- range .Values.tiers }}
+
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Values.service.name }}-{{ .version }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.service.name }}
+    version: {{ .version }}
+spec:
+  replicas: {{ .replicas }}
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        traffic.sidecar.istio.io/excludeOutboundIPRanges: 0.0.0.0/0 # Allow all Egress traffic https://github.com/istio/istio/issues/9304
+      labels:
+        app: {{ .Values.service.name }}
+        version: {{ .version }}
+    spec:
+      containers:
+      - name: {{ .Values.service.name }}
+        image: {{ .image }}
+        imagePullPolicy: "Always"
+        resources:
+          requests:
+            cpu: {{ .resources.requests.cpu }}
+            memory: {{ .resources.requests.memory }}
+          limits:
+            cpu: {{ .resources.limits.cpu }}
+            memory: {{ .resources.limits.memory }}
+        ports:
+        - containerPort: {{ .port }}
+          protocol: TCP
+        envFrom:
+          - configMapRef:
+               name: {{ .Values.service.name }}-configmap
+
+{{- end }}

@@ -1,0 +1,3 @@
+name: "istio-service"
+generator: "helm"
+path: "./chart"
