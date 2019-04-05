@@ -5,11 +5,11 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ $root.Values.service.name }}-{{ .version }}
+  name: {{ $root.Values.service.name }}-{{ .name }}
   namespace: {{ $root.Release.Namespace }}
   labels:
     app: {{ $root.Values.service.name }}
-    version: {{ .version }}
+    version: {{ .name }}
 spec:
   replicas: {{ .replicas }}
   strategy:
@@ -20,7 +20,7 @@ spec:
         traffic.sidecar.istio.io/excludeOutboundIPRanges: 0.0.0.0/0 # Allow all Egress traffic https://github.com/istio/istio/issues/9304
       labels:
         app: {{ $root.Values.service.name }}
-        version: {{ .version }}
+        version: {{ .name }}
     spec:
       containers:
       - name: {{ $root.Values.service.name }}
