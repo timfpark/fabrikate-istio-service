@@ -17,11 +17,11 @@ spec:
     - uri:
         prefix: /
     route:
-      {{- range .Values.tiers }}
+      {{- range $tierName, $tierValues := .Values.tiers }}
       - destination:
           host: "{{ $root.Values.service.name }}.{{ $root.Release.Namespace }}.svc.cluster.local"
-          subset: {{ .name }}
+          subset: {{ $tierName }}
           port:
             number: {{ $root.Values.service.port }}
-        weight: {{ .weight }}
+        weight: {{ $tierValues.weight }}
       {{- end }}

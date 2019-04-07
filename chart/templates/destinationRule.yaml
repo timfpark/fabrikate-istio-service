@@ -8,8 +8,8 @@ metadata:
 spec:
   host: "{{ .Values.service.name }}.{{ .Release.Namespace }}.svc.cluster.local"
   subsets:
-{{- range .Values.tiers }}
-  - name: {{ .name }}
+{{- range $tierName, $tierValue := .Values.tiers }}
+  - name: {{ $tierName }}
     labels:
-      version: {{ .name }}
+      version: {{ $tierName }}
 {{- end }}

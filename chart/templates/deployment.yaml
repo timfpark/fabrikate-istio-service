@@ -1,40 +1,40 @@
 {{- $root := . -}}
 
-{{- range .Values.tiers }}
+{{- range $tierName, $tierValues := .Values.tiers }}
 ---
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ $root.Values.service.name }}-{{ .name }}
+  name: {{ $root.Values.service.name }}-{{ $tierName }}
   namespace: {{ $root.Release.Namespace }}
   labels:
     app: {{ $root.Values.service.name }}
-    version: {{ .name }}
+    version: {{ $tierName }}
 spec:
-  replicas: {{ .replicas }}
+  replicas: {{ $tierValues.replicas }}
   strategy:
     type: RollingUpdate
   template:
     metadata:
       annotations:
-        traffic.sidecar.istio.io/excludeOutboundIPRanges: 0.0.0.0/0 # Allow all Egress traffic https://github.com/istio/istio/issues/9304
+        traffic.sidecar.istio.io/excludeOutboundIPRanges: 0.0.0.0/0
       labels:
         app: {{ $root.Values.service.name }}
-        version: {{ .name }}
+        version: {{ $tierValues.name }}
     spec:
       containers:
       - name: {{ $root.Values.service.name }}
-        image: {{ .image }}
+        image: {{ $tierValues.image }}
         imagePullPolicy: "Always"
         resources:
           requests:
-            cpu: {{ .resources.requests.cpu }}
-            memory: {{ .resources.requests.memory }}
+            cpu: {{ $tierValues.resources.requests.cpu }}
+            memory: {{ $tierValues.resources.requests.memory }}
           limits:
-            cpu: {{ .resources.limits.cpu }}
-            memory: {{ .resources.limits.memory }}
+            cpu: {{ $tierValues.resources.limits.cpu }}
+            memory: {{ $tierValues.resources.limits.memory }}
         ports:
-        - containerPort: {{ .port }}
+        - containerPort: {{ $tierValues.port }}
           protocol: TCP
         envFrom:
           - configMapRef:
