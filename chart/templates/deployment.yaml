@@ -37,7 +37,7 @@ spec:
         - containerPort: {{ $tierValues.port }}
           protocol: TCP
 
-{{ if .Values.configMap }}
+{{ if $root.Values.configMap }}
         envFrom:
           - configMapRef:
                name: {{ $root.Values.service.name }}-configmap
