@@ -10,7 +10,7 @@ From your [Fabrikate](https://github.com/Microsoft/fabrikate) definition at the 
 $ fab add my-service --source https://github.com/timfpark/fabrikate-istio-service
 ```
 
-then create a deployment config for each of your environments with one or more tiers. For example, a `prod` deployment config with canary and stable tiers would live in `config/prod.yaml` and look something like this:
+then create a deployment config for each of your environments with one or more tiers. For example, a `prod` deployment config with canary and stable tiers would live in `config/prod.yaml` looks like this:
 
 ```
 subcomponents:
@@ -22,6 +22,9 @@ subcomponents:
         dns: myservice.mycompany.io
         name: my-service
         port: 80
+      configMap:
+        LOG_SEVERITY: "info"
+        PORT: "80"
       tiers:
         canary:
           image: "mycompany/mycontainer:434"

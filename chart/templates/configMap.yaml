@@ -1,0 +1,13 @@
+{{ if .Values.configMap }}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-service-configmap
+  namespace: {{ .Release.Namespace }}
+data:
+{{- range $key, $value := .Values.configMap }}
+  $key: $value
+{{- end }}
+
+{{end}}
