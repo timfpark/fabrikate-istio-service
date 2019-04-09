@@ -20,7 +20,7 @@ spec:
         traffic.sidecar.istio.io/excludeOutboundIPRanges: 0.0.0.0/0
       labels:
         app: {{ $root.Values.service.name }}
-        version: {{ $tierValues.name }}
+        version: {{ $tierName }}
     spec:
       containers:
       - name: {{ $root.Values.service.name }}
